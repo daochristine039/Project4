@@ -69,7 +69,7 @@ public class Main {
 
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
-        while(true) {
+        /*while(true) {
             String inputKey = kb.next();
             switch (inputKey) {
                 case "quit":
@@ -81,6 +81,7 @@ public class Main {
                     break;
             }
         }
+        */
 
         // System.out.println("GLHF");
         

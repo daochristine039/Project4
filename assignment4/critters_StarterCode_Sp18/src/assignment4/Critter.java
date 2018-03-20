@@ -13,7 +13,7 @@ package assignment4;
  */
 
 
-import org.omg.CORBA.DynAnyPackage.Invalid;
+//import org.omg.CORBA.DynAnyPackage.Invalid;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
@@ -175,6 +175,7 @@ public abstract class Critter {
 	 * @param critter_class_name
 	 * @throws InvalidCritterException
 	 */
+	@Deprecated
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
 		try{
 			Critter newCritter = (Critter) Class.forName("assignment4." + critter_class_name).newInstance();
@@ -199,7 +200,15 @@ public abstract class Critter {
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		List<Critter> result = new java.util.ArrayList<Critter>();
-	
+
+		/*for(int i = 0; i < population.size(); i++){
+			try{
+				if(population.get(i).)
+			}catch{
+
+			}
+		}*/
+
 		return result;
 	}
 	
@@ -283,32 +292,35 @@ public abstract class Critter {
 	/**
 	 * Clear the world of all critters, dead and alive
 	 */
+
+
 	public static void clearWorld() {
 		// Complete this method.
 	}
-	
-	public static void worldTimeStep() {
-	    List<Critter> encounters = new java.util.ArrayList<Critter>();
 
-		for(int i = 0; i < population.size(); i++){
+	@Deprecated
+	public static void worldTimeStep() {
+		List<Critter> encounters = new java.util.ArrayList<Critter>();
+
+		for (int i = 0; i < population.size(); i++) {
 			/*int tempX = 0, tempY = 0;
 			tempX = current.x_coord;			//Saved to compare with new updates
 			tempY = current.y_coord;
 			*/
 
-			population.get(i).doTimeStep();				//Update energy and position
+			population.get(i).doTimeStep();                //Update energy and position
 
-			if(population.get(i).x_coord > Params.world_width - 1){     //Update position if off the top of the world
+			if (population.get(i).x_coord > Params.world_width - 1) {     //Update position if off the top of the world
 				population.get(i).x_coord -= Params.world_width;
-			} else if(population.get(i).x_coord < 0){
-                population.get(i).x_coord += Params.world_width;
+			} else if (population.get(i).x_coord < 0) {
+				population.get(i).x_coord += Params.world_width;
 			}
 
-			if(population.get(i).y_coord > Params.world_height - 1){
-			    population.get(i).y_coord -= Params.world_height;
-            } else if(population.get(i).y_coord < 0){
-			    population.get(i).y_coord += Params.world_height;
-            }
+			if (population.get(i).y_coord > Params.world_height - 1) {
+				population.get(i).y_coord -= Params.world_height;
+			} else if (population.get(i).y_coord < 0) {
+				population.get(i).y_coord += Params.world_height;
+			}
 
 
 			/*if(population.get(i).energy <= 0){
@@ -321,24 +333,24 @@ public abstract class Critter {
         }*/
 
 
-		for(int i = 0; i < population.size(); i++){                 //Resolve encounters
-            Critter lastSurvivor = population.get(i);
-            boolean fight1, fight2;
-            boolean dead1 = false, dead2 = false;
-            int dice1 = 0, dice2 = 0;
-            int tempX = lastSurvivor.x_coord, tempY = lastSurvivor.y_coord;
+		for (int i = 0; i < population.size(); i++) {                 //Resolve encounters
+			Critter lastSurvivor = population.get(i);
+			boolean fight1, fight2;
+			boolean dead1 = false, dead2 = false;
+			int dice1 = 0, dice2 = 0;
+			int tempX = lastSurvivor.x_coord, tempY = lastSurvivor.y_coord;
 
-            if(lastSurvivor.energy <= 0){       //Dead?
-                continue;
-            }
+			if (lastSurvivor.energy <= 0) {       //Dead?
+				continue;
+			}
 
-            for(int k = 0; k < population.size(); k++) {
-                if(k != i){
-                    Critter potentialOpponent = population.get(k);
+			for (int k = 0; k < population.size(); k++) {
+				if (k != i) {
+					Critter potentialOpponent = population.get(k);
 
-                    if(potentialOpponent.energy <= 0){  //Dead?
-                        continue;
-                    }
+					if (potentialOpponent.energy <= 0) {  //Dead?
+						continue;
+					}
 
 
                     /*if (lastSurvivor.energy <= 0) {                                   //Dead?
@@ -355,29 +367,29 @@ public abstract class Critter {
                         dead2 = true;
                     }*/
 
-                //If they are both not dead, haven't moved, and are in the same position
-                    if ((lastSurvivor.x_coord == potentialOpponent.x_coord) && (lastSurvivor.y_coord == potentialOpponent.y_coord)) {
-                        fight1 = lastSurvivor.fight(potentialOpponent.toString());      //Do they want to fight? Are they running away?
-                        fight2 = potentialOpponent.fight(lastSurvivor.toString());
+					//If they are both not dead, haven't moved, and are in the same position
+					if ((lastSurvivor.x_coord == potentialOpponent.x_coord) && (lastSurvivor.y_coord == potentialOpponent.y_coord)) {
+						fight1 = lastSurvivor.fight(potentialOpponent.toString());      //Do they want to fight? Are they running away?
+						fight2 = potentialOpponent.fight(lastSurvivor.toString());
 
-                        if(lastSurvivor.energy <= 0){
-                            break;
-                        }
-                        if(potentialOpponent.energy <= 0){
-                            continue;
-                        }
+						if (lastSurvivor.energy <= 0) {
+							break;
+						}
+						if (potentialOpponent.energy <= 0) {
+							continue;
+						}
 
-                        if((lastSurvivor.x_coord == potentialOpponent.x_coord) && (lastSurvivor.y_coord == potentialOpponent.y_coord)){
-                            if (fight1) {
-                                dice1 = Critter.getRandomInt(lastSurvivor.energy);
-                            }
-                            if (fight2) {
-                                dice2 = Critter.getRandomInt(potentialOpponent.energy);
-                            }
+						if ((lastSurvivor.x_coord == potentialOpponent.x_coord) && (lastSurvivor.y_coord == potentialOpponent.y_coord)) {
+							if (fight1) {
+								dice1 = Critter.getRandomInt(lastSurvivor.energy);
+							}
+							if (fight2) {
+								dice2 = Critter.getRandomInt(potentialOpponent.energy);
+							}
 
-                            if (dice1 < dice2) {      //If dice2 is bigger, opponent wins
-                                potentialOpponent.energy += (lastSurvivor.energy/2);
-                                lastSurvivor.energy = 0;
+							if (dice1 < dice2) {      //If dice2 is bigger, opponent wins
+								potentialOpponent.energy += (lastSurvivor.energy / 2);
+								lastSurvivor.energy = 0;
                                 /*for (int m = 0; m < population.size(); m++) {
                                     if (population.get(m).equals(potentialOpponent)) {
                                         population.get(m).energy += (lastSurvivor.energy / 2);
@@ -386,34 +398,39 @@ public abstract class Critter {
                                         break;
                                     }
                                 }*/
-                            } else {
-                                lastSurvivor.energy += (potentialOpponent.energy/2);
-                                potentialOpponent.energy = 0;
-                            }
-                        }
-                    }
-                }
-            }
+							} else {
+								lastSurvivor.energy += (potentialOpponent.energy / 2);
+								potentialOpponent.energy = 0;
+							}
+						}
+					}
+				}
+			}
 		}
 
-		for(int i = 0; i < population.size(); i++){
-		    population.get(i).energy -= Params.rest_energy_cost;
-        }
+		for (int i = 0; i < population.size(); i++) {
+			population.get(i).energy -= Params.rest_energy_cost;
+		}
 
-        for(int i = 0; i < population.size();){
-		    if(population.get(i).energy <= 0){
-		        population.remove(population.get(i));
-            } else{
-		        i++;
-            }
-        }
+		for (int i = 0; i < population.size(); ) {
+			if (population.get(i).energy <= 0) {
+				population.remove(population.get(i));
+			} else {
+				i++;
+			}
+		}
 
-        for(int i = 0; i < population.size(); i++){
-		    population.get(i).moved = false;
-        }
+		for (int i = 0; i < population.size(); i++) {
+			population.get(i).moved = false;
+		}
 
-        for(int i = 0; i < Params.refresh_algae_count; i++){
-        }
+		for (int i = 0; i < Params.refresh_algae_count; i++) {
+			try {
+				makeCritter("Algae");
+			}catch(InvalidCritterException event){
+				System.out.println("Invalid critter exception");
+			}
+		}
 
 		population.addAll(babies);
 		babies.clear();
