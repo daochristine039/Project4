@@ -75,7 +75,7 @@ public class A4SampleTest2 {
 	 * Use MakeCritter to create a Critter, and makes sure walk works for 1 step.
 	 * @throws InvalidCritterException
 	 */
-	@Deprecated
+	//@Deprecated
 	public void testWalk() throws InvalidCritterException {
 		Critter.makeCritter("MyCritter1");
 		MyCritter1 m1 = (MyCritter1) Critter.TestCritter.getPopulation().get(0);
@@ -91,7 +91,7 @@ public class A4SampleTest2 {
 	 * 7.
 	 * Walks 1 step each turn.  Check energy drop at each turn.
 	 */
-	@Deprecated
+	//@Deprecated
 	public void WalkEnergyTest() throws InvalidCritterException {
 		Critter.makeCritter("MyCritter1");
 		MyCritter1 c = (MyCritter1) Critter.TestCritter.getPopulation().get(0);
@@ -113,7 +113,7 @@ public class A4SampleTest2 {
 	 * 
 	 */
 	@Test
-    @Deprecated
+    //@Deprecated
 	public void RunDuringFightTest() throws InvalidCritterException {
 		int x = 0;
 		int y = 0;

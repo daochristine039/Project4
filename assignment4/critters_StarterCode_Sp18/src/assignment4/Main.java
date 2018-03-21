@@ -69,19 +69,41 @@ public class Main {
 
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
-        /*while(true) {
+        loop: while(true) {
+            System.out.print("critters > ");
             String inputKey = kb.next();
+            int nextInputKey;
+            if(inputKey.equals("\n")){
+                continue;
+            }
+
             switch (inputKey) {
                 case "quit":
-                    return;
+                    break loop;
                 case "show":
                     Critter.displayWorld();
                     break;
+                case "step":
+                    nextInputKey = kb.nextInt();
+                    if(nextInputKey > 0){
+                        for(int i = 0; i < nextInputKey; i++){
+                            Critter.worldTimeStep();
+                        }
+                    } else {
+                        Critter.worldTimeStep();
+                    }
+                    break;
+                case "seed":
+                    nextInputKey = kb.nextInt();
+                    Critter.setSeed(nextInputKey);
+                    break;
+                case "make":
+                    
                 default:
                     break;
             }
         }
-        */
+
 
         // System.out.println("GLHF");
         

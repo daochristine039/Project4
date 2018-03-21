@@ -175,7 +175,7 @@ public abstract class Critter {
 	 * @param critter_class_name
 	 * @throws InvalidCritterException
 	 */
-	@Deprecated
+	//@Deprecated
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
 		try{
 			Critter newCritter = (Critter) Class.forName("assignment4." + critter_class_name).newInstance();
@@ -298,7 +298,7 @@ public abstract class Critter {
 		// Complete this method.
 	}
 
-	@Deprecated
+	//@Deprecated
 	public static void worldTimeStep() {
 		List<Critter> encounters = new java.util.ArrayList<Critter>();
 
