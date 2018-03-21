@@ -12,6 +12,8 @@ package assignment4;
  * Fall 2016
  */
 
+
+
 import java.util.Scanner;
 import java.io.*;
 
@@ -71,35 +73,72 @@ public class Main {
         /* Write your code below. */
         loop: while(true) {
             System.out.print("critters > ");
-            String inputKey = kb.next();
-            int nextInputKey;
+            String inputKey = kb.nextLine();
+            String[] splitInput = inputKey.split(" ");
+            int inputNum = 0;
+
+            System.out.println(inputKey);
             if(inputKey.equals("\n")){
                 continue;
             }
 
-            switch (inputKey) {
+            switch (splitInput[0]) {
                 case "quit":
                     break loop;
                 case "show":
                     Critter.displayWorld();
                     break;
                 case "step":
-                    nextInputKey = kb.nextInt();
-                    if(nextInputKey > 0){
-                        for(int i = 0; i < nextInputKey; i++){
-                            Critter.worldTimeStep();
-                        }
-                    } else {
+                    if(splitInput.length < 2){
                         Critter.worldTimeStep();
+                    }else {
+                        try {
+                            inputNum = Integer.parseInt(splitInput[1]);
+                            for (int i = 0; i < inputNum; i++) {
+                                Critter.worldTimeStep();
+                            }
+                        }catch(NumberFormatException event){
+                            System.out.println("error processing: " + inputKey);
+                        }
                     }
                     break;
                 case "seed":
-                    nextInputKey = kb.nextInt();
-                    Critter.setSeed(nextInputKey);
+                    try {
+                        inputNum = Integer.parseInt(splitInput[1]);
+                        Critter.setSeed(inputNum);
+                    }catch(NumberFormatException event){
+                        System.out.println("error processing: " + inputKey);
+                    }
                     break;
                 case "make":
-                    
+                    if(splitInput.length == 2){
+                        try{
+                            Critter.makeCritter(splitInput[1]);
+                        }catch(InvalidCritterException event){
+                            System.out.println("error processing: " + inputKey);
+                        }
+                    } else if(splitInput.length == 3){
+                        try{
+                            inputNum = Integer.parseInt(splitInput[2]);
+                        }catch (NumberFormatException event){
+                            System.out.println("error processing: " + inputKey);
+                        }
+
+                        try{
+                            for(int i = 0; i < inputNum; i++){
+                                Critter.makeCritter(splitInput[1]);
+                            }
+                        }catch(InvalidCritterException event){
+                            System.out.println("error processing: " + inputKey);
+                        }
+                    } else {
+                        System.out.println("error processing: " + inputKey);
+                    }
+                    break;
+                case "stats":
+
                 default:
+                    System.out.println("invalid command: " + splitInput[0]);
                     break;
             }
         }

@@ -185,9 +185,7 @@ public abstract class Critter {
 			newCritter.moved = false;
 
 			Critter.population.add(newCritter);
-
-
-		}catch(InstantiationException | ClassNotFoundException | IllegalAccessException event){
+		}catch(InstantiationException | ClassNotFoundException | IllegalAccessException | NoClassDefFoundError event){
 			throw new InvalidCritterException(critter_class_name);
 		}
 	}
@@ -444,15 +442,23 @@ public abstract class Critter {
         System.out.println("+");
 
 		for(int i = 0; i < Params.world_height; i++){
+			boolean found = false;
 		    System.out.print("|");
 		    for(int j = 0; j < Params.world_width; j++){
+		    	found = false;
 		        for(int k = 0; k < population.size(); k++){
 		            if(population.get(k).y_coord == i && population.get(k).x_coord == j){
 		                System.out.print(population.get(k).toString());
+		                found = true;
+		                break;
                     }
                 }
+
+				if(!found) {
+					System.out.print(" ");
+				}
             }
-            System.out.println("|");
+			System.out.println("|");
         }
 
         System.out.print("+");
