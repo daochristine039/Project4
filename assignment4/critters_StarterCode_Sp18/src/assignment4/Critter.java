@@ -2,12 +2,9 @@ package assignment4;
 /* CRITTERS Critter.java
  * EE422C Project 4 submission by
  * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
+ * <Christine Dao>
+ * <cd33279>
+ * <15470>
  * Slip days used: <0>
  * Fall 2016
  */
@@ -54,10 +51,16 @@ public abstract class Critter {
 	private int y_coord;
 	private boolean moved;
 	private List<Critter> encounters = new java.util.ArrayList<Critter>();
-	
+
+    /**
+     * Move the critter in the direction indicated by "int direction" by one spot
+     * Remove the cost of energy required for walking from the critter
+     * Make "moved = true" since the critter moves
+     * @param direction
+     */
 	protected final void walk(int direction) {
-			energy -= Params.walk_energy_cost;
-			moved = true;
+			energy -= Params.walk_energy_cost;  //Remove the cost of energy for walking from the critter
+			moved = true;                       //The critter moves
 
 
 		switch(direction){
@@ -93,10 +96,16 @@ public abstract class Critter {
 				break;
 		}
 	}
-	
+
+    /**
+     * move the critter in the direction indicated by "int direction" by two spots
+     * Remove the cost of energy required for running from the critter
+     * Make "moved = true" since the critter moves
+     * @param direction
+     */
 	protected final void run(int direction) {
-			energy -= Params.run_energy_cost;
-			moved = true;
+			energy -= Params.run_energy_cost;   //Remove cost of energy from running
+			moved = true;                       //Critter moves
 
 
 		switch(direction){
@@ -132,34 +141,39 @@ public abstract class Critter {
 				break;
 		}
 	}
-	
+
+    /**
+     * Create a new critter based on the parent
+     * @param direction
+     * @param offspring : new child of the parent
+     */
 	protected final void reproduce(Critter offspring, int direction) {
-	    if(this.energy < Params.min_reproduce_energy){
-	        return;
+	    if(this.energy < Params.min_reproduce_energy){     //If the energy level of the parent is lower than the minimum energy to reproduce,
+	        return;                                        //Return
         }
 
-        offspring.energy = this.energy/2;
-	    this.energy = Math.round(this.energy/2);
+        offspring.energy = this.energy/2;                  //Energy of offpsring = the parent energy divided by 2 (rounded down)
+	    this.energy = Math.round(this.energy/2);           //Lower energy of parent by half (rounded up_
 
-        offspring.x_coord = this.x_coord;
-        offspring.y_coord = this.y_coord;
-        offspring.walk(direction);
+        offspring.x_coord = this.x_coord;                  //Set offspring's x coordinate to parent's x coordinate
+        offspring.y_coord = this.y_coord;                  //Set offspring's y coordinate to parent's y coordinate
+        offspring.walk(direction);                         //Call walk method to place the offspring in a call adjacent to the parent
 
-		if(offspring.x_coord > Params.world_width - 1){     //Update position if off the top of the world
+		if(offspring.x_coord > Params.world_width - 1){    //Update x coordinate if off the top of the world
 			offspring.x_coord -= Params.world_width;
 		} else if(offspring.x_coord < 0){
 			offspring.x_coord += Params.world_width;
 		}
 
-		if(offspring.y_coord > Params.world_height - 1){
+		if(offspring.y_coord > Params.world_height - 1){   //Update y coordinate if off the top of the world
 			offspring.y_coord -= Params.world_height;
 		} else if(offspring.y_coord < 0){
 			offspring.y_coord += Params.world_height;
 		}
 
-        offspring.energy += Params.rest_energy_cost;
-        offspring.moved = false;
-        babies.add(offspring);
+        offspring.energy += Params.rest_energy_cost;      //Re-establish the lost rest energy cost
+        offspring.moved = false;                          //Re-establish "moved = false"
+        babies.add(offspring);                            //Add the newborn to babies list
 	}
 
 	public abstract void doTimeStep();
@@ -175,18 +189,17 @@ public abstract class Critter {
 	 * @param critter_class_name
 	 * @throws InvalidCritterException
 	 */
-	//@Deprecated
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
 		try{
-			Critter newCritter = (Critter) Class.forName("assignment4." + critter_class_name).newInstance();
-            newCritter.energy = Params.start_energy;
+			Critter newCritter = (Critter) Class.forName("assignment4." + critter_class_name).newInstance();    //Creating a new Critter of the subclass indicated by critter_class_name
+            newCritter.energy = Params.start_energy;                                    //Set critter's instance variables to standard ones
 			newCritter.x_coord = Critter.getRandomInt(Params.world_width);
 			newCritter.y_coord = Critter.getRandomInt(Params.world_height);
 			newCritter.moved = false;
 
-			Critter.population.add(newCritter);
-		}catch(InstantiationException | ClassNotFoundException | IllegalAccessException | NoClassDefFoundError event){
-			throw new InvalidCritterException(critter_class_name);
+			Critter.population.add(newCritter);                   //Add the new critter to the population list
+		}catch(InstantiationException | ClassNotFoundException | IllegalAccessException | NoClassDefFoundError event){  //If "critter_class_name is not valid,
+			throw new InvalidCritterException(critter_class_name);                                                   //Error
 		}
 	}
 	
@@ -203,15 +216,15 @@ public abstract class Critter {
 		try{
 			Class<?> critterClass = Class.forName("assignment4." + critter_class_name);
 			for(int i = 0; i < population.size(); i++){
-				if(critterClass.isInstance(population.get(i))) {
-					result.add(population.get(i));
+				if(critterClass.isInstance(population.get(i))) {            //If the critter from population list is an instance of "critterClass",
+					result.add(population.get(i));                          //Add the critter to the result list
 				}
 			}
 
-			critterClass.getMethod("runStats", List.class).invoke(null, result);
+			critterClass.getMethod("runStats", List.class).invoke(null, result);    //Run the stats for the result list
 
-		}catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException event){
-			throw new InvalidCritterException(critter_class_name);
+		}catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException event){  //If "critter_class_name" is not valid,
+			throw new InvalidCritterException(critter_class_name);                                                //Error
 		}
 
 
@@ -298,116 +311,75 @@ public abstract class Critter {
 	/**
 	 * Clear the world of all critters, dead and alive
 	 */
-
-
 	public static void clearWorld() {
 		population.clear();
 		babies.clear();
 	}
 
-	//@Deprecated
+    /**
+     * Run all the methods of each critter in population
+     */
 	public static void worldTimeStep() {
-		List<Critter> encounters = new java.util.ArrayList<Critter>();
-
 		for (int i = 0; i < population.size(); i++) {
-			/*int tempX = 0, tempY = 0;
-			tempX = current.x_coord;			//Saved to compare with new updates
-			tempY = current.y_coord;
-			*/
+			population.get(i).doTimeStep();                //Run doTimeStep of each critter in population list
 
-			population.get(i).doTimeStep();                //Update energy and position
-
-			if (population.get(i).x_coord > Params.world_width - 1) {     //Update position if off the top of the world
+			if (population.get(i).x_coord > Params.world_width - 1) {     //Update x_coord if off the top of the world
 				population.get(i).x_coord -= Params.world_width;
 			} else if (population.get(i).x_coord < 0) {
 				population.get(i).x_coord += Params.world_width;
 			}
 
-			if (population.get(i).y_coord > Params.world_height - 1) {
+			if (population.get(i).y_coord > Params.world_height - 1) {    //Update y_coord if off the top of the world
 				population.get(i).y_coord -= Params.world_height;
 			} else if (population.get(i).y_coord < 0) {
 				population.get(i).y_coord += Params.world_height;
 			}
-
-
-			/*if(population.get(i).energy <= 0){
-				population.remove(i);		//Remove dead critters
-			}*/
 		}
 
-		/*for(int i = 0; i < population.size(); i++){                 //Update to no move
-		    population.get(i).moved = false;
-        }*/
 
+		for (int i = 0; i < population.size(); i++) {                     //Resolve encounters
+			Critter fighter1 = population.get(i);                         //Holds one critter
+			boolean fight1, fight2;                                       //Hold whether the critters want to fight or not
+			int dice1 = 0, dice2 = 0;                                     //Hold the number thrown by dice when resolving a fight
 
-		for (int i = 0; i < population.size(); i++) {                 //Resolve encounters
-			Critter lastSurvivor = population.get(i);
-			boolean fight1, fight2;
-			boolean dead1 = false, dead2 = false;
-			int dice1 = 0, dice2 = 0;
-			int tempX = lastSurvivor.x_coord, tempY = lastSurvivor.y_coord;
-
-			if (lastSurvivor.energy <= 0) {       //Dead?
-				continue;
+			if (fighter1.energy <= 0) {                                   //If the fighter1 is dead,
+				continue;                                                 //Skip iteration
 			}
 
-			for (int k = 0; k < population.size(); k++) {
-				if (k != i) {
-					Critter potentialOpponent = population.get(k);
+			for (int k = 0; k < population.size(); k++) {                 //Find the critter with the same coordinates as fighter1
+				if (k != i) {                                             //If it's not the same index as fighter1,
+					Critter fighter2 = population.get(k);                 //Hold it into fighter2
 
-					if (potentialOpponent.energy <= 0) {  //Dead?
+					if (fighter2.energy <= 0) {                           //If dead, skip iteration
 						continue;
 					}
 
+					//If they both have the same coordinates
+					if ((fighter1.x_coord == fighter2.x_coord) && (fighter1.y_coord == fighter2.y_coord)) {
+						fight1 = fighter1.fight(fighter2.toString());      //fight1, fight2 hold whether they want to fight or not
+						fight2 = fighter2.fight(fighter1.toString());
 
-                    /*if (lastSurvivor.energy <= 0) {                                   //Dead?
-                        if (encounters.contains(lastSurvivor)) {
-                            encounters.remove(lastSurvivor);
-                        }
-                        population.remove(lastSurvivor);
-                        dead1 = true;
-                    }
-
-                    if (opponent.energy <= 0) {
-                        encounters.remove(k);
-                        population.remove(opponent);
-                        dead2 = true;
-                    }*/
-
-					//If they are both not dead, haven't moved, and are in the same position
-					if ((lastSurvivor.x_coord == potentialOpponent.x_coord) && (lastSurvivor.y_coord == potentialOpponent.y_coord)) {
-						fight1 = lastSurvivor.fight(potentialOpponent.toString());      //Do they want to fight? Are they running away?
-						fight2 = potentialOpponent.fight(lastSurvivor.toString());
-
-						if (lastSurvivor.energy <= 0) {
+						if (fighter1.energy <= 0) {                        //If dead after fight method is called, leave the loop
 							break;
 						}
-						if (potentialOpponent.energy <= 0) {
+						if (fighter2.energy <= 0) {
 							continue;
 						}
-
-						if ((lastSurvivor.x_coord == potentialOpponent.x_coord) && (lastSurvivor.y_coord == potentialOpponent.y_coord)) {
-							if (fight1) {
-								dice1 = Critter.getRandomInt(lastSurvivor.energy);
+                        //If the critters are still in the same position after they fight, resolve the fight
+						if ((fighter1.x_coord == fighter2.x_coord) && (fighter1.y_coord == fighter2.y_coord)) {
+							if (fight1) {                                           //If fighter1 wants to fight,
+								dice1 = Critter.getRandomInt(fighter1.energy);      //Get a random number up to fighter's energy level
 							}
 							if (fight2) {
-								dice2 = Critter.getRandomInt(potentialOpponent.energy);
+								dice2 = Critter.getRandomInt(fighter2.energy);
 							}
 
-							if (dice1 < dice2) {      //If dice2 is bigger, opponent wins
-								potentialOpponent.energy += (lastSurvivor.energy / 2);
-								lastSurvivor.energy = 0;
-                                /*for (int m = 0; m < population.size(); m++) {
-                                    if (population.get(m).equals(potentialOpponent)) {
-                                        population.get(m).energy += (lastSurvivor.energy / 2);
-                                        lastSurvivor = population.get(m);
-                                        encounters.remove(lastSurvivor);
-                                        break;
-                                    }
-                                }*/
-							} else {
-								lastSurvivor.energy += (potentialOpponent.energy / 2);
-								potentialOpponent.energy = 0;
+							if (dice1 < dice2) {      //If fighter2 throws a bigger number,
+                                fighter2.energy += (fighter1.energy / 2);   //Fighter2 gets 1/2 of fighter1's energy
+                                fighter1.energy = 0;                        //Set fighter1's energy to 0 to indicate its death
+							} else {                  //If fighter1 throws a bigger number,
+                                fighter1.energy += (fighter2.energy / 2);   //Fighter1 gets 1/2 of fighter2's energy
+                                fighter2.energy = 0;                        //Set fighter2's energy to 0 to indicate its death
 							}
 						}
 					}
@@ -415,11 +387,11 @@ public abstract class Critter {
 			}
 		}
 
-		for (int i = 0; i < population.size(); i++) {
+		for (int i = 0; i < population.size(); i++) {              //Remove energy cost of resting for each critter
 			population.get(i).energy -= Params.rest_energy_cost;
 		}
 
-		for (int i = 0; i < population.size(); ) {
+		for (int i = 0; i < population.size(); ) {                 //Remove all dead critters
 			if (population.get(i).energy <= 0) {
 				population.remove(population.get(i));
 			} else {
@@ -427,11 +399,11 @@ public abstract class Critter {
 			}
 		}
 
-		for (int i = 0; i < population.size(); i++) {
+		for (int i = 0; i < population.size(); i++) {             //Set moved back to false
 			population.get(i).moved = false;
 		}
 
-		for (int i = 0; i < Params.refresh_algae_count; i++) {
+		for (int i = 0; i < Params.refresh_algae_count; i++) {    //Create new Algae critters as many times as the refresh_algae_count
 			try {
 				makeCritter("Algae");
 			}catch(InvalidCritterException event){
@@ -439,30 +411,33 @@ public abstract class Critter {
 			}
 		}
 
-		population.addAll(babies);
-		babies.clear();
+		population.addAll(babies);              //Add all the babies to the population
+		babies.clear();                         //Clear all the babies from babies list
 	}
-	
+
+    /**
+     * Print out the entire world
+     */
 	public static void displayWorld() {
-		System.out.print("+");
+		System.out.print("+");                              //Printing out the borders
 		for(int i = 0; i < Params.world_width; i++){
 		    System.out.print("-");
         }
         System.out.println("+");
 
-		for(int i = 0; i < Params.world_height; i++){
-			boolean found = false;
+		for(int i = 0; i < Params.world_height; i++){       //Go through each row
+			boolean found;
 		    System.out.print("|");
 		    for(int j = 0; j < Params.world_width; j++){
 		    	found = false;
-		        for(int k = 0; k < population.size(); k++){
-		            if(population.get(k).y_coord == i && population.get(k).x_coord == j){
-		                System.out.print(population.get(k).toString());
-		                found = true;
-		                break;
+		        for(int k = 0; k < population.size(); k++){     //Go through entire population to find critters with coordinates [i,j]
+		            if(population.get(k).y_coord == i && population.get(k).x_coord == j){   //If the current critter has the same coordinates,
+		                System.out.print(population.get(k).toString());                   //Print it out
+		                found = true;                                                     //Critter is found
+		                break;                                                            //Break the loop and go to next coordinate
                     } else{
-						for(int m = 0; m < babies.size(); m++) {
-							if (babies.get(k).y_coord == i && babies.get(k).x_coord == j) {
+						for(int m = 0; m < babies.size(); m++) {            //If a critter is not found in population list for the current coordinates,
+							if (babies.get(k).y_coord == i && babies.get(k).x_coord == j) { //Check in babies list
 								System.out.print(babies.get(k).toString());
 								found = true;
 								break;
@@ -471,14 +446,14 @@ public abstract class Critter {
 					}
                 }
 
-				if(!found) {
-					System.out.print(" ");
+				if(!found) {                    //If a critter is not found at all in both lists,
+					System.out.print(" ");      //Print out a blank space
 				}
             }
-			System.out.println("|");
+			System.out.println("|");            //Print this out to finish up the current row
         }
 
-        System.out.print("+");
+        System.out.print("+");                  //Print borders
         for(int i = 0; i < Params.world_width; i++){
             System.out.print("-");
         }

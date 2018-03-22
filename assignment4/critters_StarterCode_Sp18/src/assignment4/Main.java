@@ -2,14 +2,9 @@ package assignment4;
 /* CRITTERS Main.java
  * EE422C Project 4 submission by
  * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
- * Slip days used: <0>
- * Fall 2016
+ * <Christine Dao>
+ * <cd33279>
+ * <>
  */
 
 
@@ -74,96 +69,94 @@ public class Main {
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
         loop: while(true) {
-            //System.out.print("critters > ");
-            String inputKey = kb.nextLine();
-            String[] splitInput = inputKey.split(" ");
-            int inputNum = 0;
+            System.out.print("critters > ");                    //The tests pass when this is removed
+            String inputKey = kb.nextLine();                    //Get the whole line typed by the user
+            String[] splitInput = inputKey.split(" ");    //Split the string into separate words
+            int inputNum = 0;                                   //Used to convert String to Int
 
-            if(inputKey.equals("\n")){
+            if(inputKey.equals("\n")){                          //If there's a new line, skip the iteration and start another one
                 continue;
             }
 
             switch (splitInput[0]) {
                 case "quit":
-                    if(splitInput.length > 1){
-                        System.out.println("error processing: " + inputKey);
+                    if(splitInput.length > 1){                  //If the input has more than 1 word,
+                        System.out.println("error processing: " + inputKey);    //Error
                         break;
                     }
-                    Critter.clearWorld();
+                    Critter.clearWorld();                       //Else, clear the world and leave the loop
                     break loop;
                 case "show":
-                    if(splitInput.length > 1){
-                        System.out.println("error processing: " + inputKey);
+                    if(splitInput.length > 1){                  //If the input has more than 1 word,
+                        System.out.println("error processing: " + inputKey);    //Error
                         break;
                     }
-                    Critter.displayWorld();
+                    Critter.displayWorld();                     //Else, display the world
                     break;
                 case "step":
-                    if(splitInput.length > 2){
-                        System.out.println("error processing: " + inputKey);
+                    if(splitInput.length > 2){                  //If the input has more than 2 words,
+                        System.out.println("error processing: " + inputKey);    //Error
                         break;
                     }
-                    if(splitInput.length < 2){
-                        Critter.worldTimeStep();
-                    }else {
+                    if(splitInput.length < 2){                  //If the input only has one word,
+                        Critter.worldTimeStep();                //Run worldTimeStep
+                    }else {                                     //If there are exactly 2 words,
                         try {
-                            inputNum = Integer.parseInt(splitInput[1]);
-                            for (int i = 0; i < inputNum; i++) {
+                            inputNum = Integer.parseInt(splitInput[1]); //Convert the 2nd String into an integer
+                            for (int i = 0; i < inputNum; i++) {        //Run worldTimeStep as many times as inputNum
                                 Critter.worldTimeStep();
                             }
-                        }catch(NumberFormatException event){
-                            System.out.println("error processing: " + inputKey);
+                        }catch(NumberFormatException event){            //If the 2nd String couldn't be converted,
+                            System.out.println("error processing: " + inputKey);    //Error
                         }
                     }
                     break;
                 case "seed":
-                    if(splitInput.length > 2){
-                        System.out.println("error processing: " + inputKey);
+                    if(splitInput.length > 2){                         //If there are more than 2 words,
+                        System.out.println("error processing: " + inputKey);    //Error
                         break;
                     }
                     try {
-                        inputNum = Integer.parseInt(splitInput[1]);
+                        inputNum = Integer.parseInt(splitInput[1]); //Convert the 2nd String to an integer
                         Critter.setSeed(inputNum);
-                    }catch(NumberFormatException event){
-                        System.out.println("error processing: " + inputKey);
+                    }catch(NumberFormatException event){            //If the 2nd String couldn't be converted,
+                        System.out.println("error processing: " + inputKey);    //Error
                     }
                     break;
                 case "make":
-                    if(splitInput.length == 2){
+                    if(splitInput.length == 2){                 //If there are exactly 2 words,
                         try{
-                            Critter.makeCritter(splitInput[1]);
-                        }catch(InvalidCritterException event){
-                            System.out.println("error processing: " + inputKey);
+                            Critter.makeCritter(splitInput[1]); //Create a critter of type specified by the 2nd String
+                        }catch(InvalidCritterException event){  //If the critter does not exist,
+                            System.out.println("error processing: " + inputKey);   //Error
                         }
-                    } else if(splitInput.length == 3){
+                    } else if(splitInput.length == 3){          //If there are exactly 3 words,
                         try{
-                            inputNum = Integer.parseInt(splitInput[2]);
-                        }catch (NumberFormatException event){
-                            System.out.println("error processing: " + inputKey);
+                            inputNum = Integer.parseInt(splitInput[2]);    //Convert the 3rd String into an integer
+                        }catch (NumberFormatException event){              //If the 3rd String couldn't be converted,
+                            System.out.println("error processing: " + inputKey);    //Error
                         }
 
                         try{
-                            for(int i = 0; i < inputNum; i++){
-                                Critter.makeCritter(splitInput[1]);
+                            for(int i = 0; i < inputNum; i++){             //If the critter type is valid,
+                                Critter.makeCritter(splitInput[1]);        //Create critters as many times as inputNum
                             }
-                        }catch(InvalidCritterException event){
-                            System.out.println("error processing: " + inputKey);
+                        }catch(InvalidCritterException event){             //If the critter type is not valid,
+                            System.out.println("error processing: " + inputKey);    //Error
                         }
                     } else {
-                        System.out.println("error processing: " + inputKey);
+                        System.out.println("error processing: " + inputKey);   //If there are neither 2 or 3 words, error
                     }
                     break;
                 case "stats":
-                    //List<Critter> critterInstances;
                     try {
                        Critter.getInstances(splitInput[1]);
-                       //critterInstances.getClass().getMethod("runStats").invoke(null);
                     }catch(InvalidCritterException event){
-                        System.out.println("error processing: " + inputKey);
+                        System.out.println("error processing: " + inputKey);    //If the critter type is invalid, error
                     }
                     break;
                 default:
-                    System.out.println("invalid command: " + splitInput[0]);
+                    System.out.println("invalid command: " + splitInput[0]);    //If none of the commands match the input, error
                     break;
             }
         }
