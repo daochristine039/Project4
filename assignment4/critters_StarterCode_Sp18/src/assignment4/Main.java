@@ -14,8 +14,10 @@ package assignment4;
 
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Scanner;
 import java.io.*;
+import java.util.List;
 
 
 /*
@@ -72,23 +74,35 @@ public class Main {
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
         loop: while(true) {
-            System.out.print("critters > ");
+            //System.out.print("critters > ");
             String inputKey = kb.nextLine();
             String[] splitInput = inputKey.split(" ");
             int inputNum = 0;
 
-            System.out.println(inputKey);
             if(inputKey.equals("\n")){
                 continue;
             }
 
             switch (splitInput[0]) {
                 case "quit":
+                    if(splitInput.length > 1){
+                        System.out.println("error processing: " + inputKey);
+                        break;
+                    }
+                    Critter.clearWorld();
                     break loop;
                 case "show":
+                    if(splitInput.length > 1){
+                        System.out.println("error processing: " + inputKey);
+                        break;
+                    }
                     Critter.displayWorld();
                     break;
                 case "step":
+                    if(splitInput.length > 2){
+                        System.out.println("error processing: " + inputKey);
+                        break;
+                    }
                     if(splitInput.length < 2){
                         Critter.worldTimeStep();
                     }else {
@@ -103,6 +117,10 @@ public class Main {
                     }
                     break;
                 case "seed":
+                    if(splitInput.length > 2){
+                        System.out.println("error processing: " + inputKey);
+                        break;
+                    }
                     try {
                         inputNum = Integer.parseInt(splitInput[1]);
                         Critter.setSeed(inputNum);
@@ -136,7 +154,14 @@ public class Main {
                     }
                     break;
                 case "stats":
-
+                    //List<Critter> critterInstances;
+                    try {
+                       Critter.getInstances(splitInput[1]);
+                       //critterInstances.getClass().getMethod("runStats").invoke(null);
+                    }catch(InvalidCritterException event){
+                        System.out.println("error processing: " + inputKey);
+                    }
+                    break;
                 default:
                     System.out.println("invalid command: " + splitInput[0]);
                     break;

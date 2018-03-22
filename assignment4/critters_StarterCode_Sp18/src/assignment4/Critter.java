@@ -16,6 +16,7 @@ package assignment4;
 //import org.omg.CORBA.DynAnyPackage.Invalid;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /* see the PDF for descriptions of the methods and fields in this class
@@ -199,13 +200,21 @@ public abstract class Critter {
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		List<Critter> result = new java.util.ArrayList<Critter>();
 
-		/*for(int i = 0; i < population.size(); i++){
-			try{
-				if(population.get(i).)
-			}catch{
 
+		try{
+			Class<?> critterClass = Class.forName("assignment4." + critter_class_name);
+			for(int i = 0; i < population.size(); i++){
+				if(critterClass.isInstance(population.get(i))) {
+					result.add(population.get(i));
+				}
 			}
-		}*/
+
+			critterClass.getMethod("runStats", List.class).invoke(null, result);
+
+		}catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException event){
+			throw new InvalidCritterException(critter_class_name);
+		}
+
 
 		return result;
 	}
@@ -293,7 +302,8 @@ public abstract class Critter {
 
 
 	public static void clearWorld() {
-		// Complete this method.
+		population.clear();
+		babies.clear();
 	}
 
 	//@Deprecated
@@ -451,7 +461,15 @@ public abstract class Critter {
 		                System.out.print(population.get(k).toString());
 		                found = true;
 		                break;
-                    }
+                    } else{
+						for(int m = 0; m < babies.size(); m++) {
+							if (babies.get(k).y_coord == i && babies.get(k).x_coord == j) {
+								System.out.print(babies.get(k).toString());
+								found = true;
+								break;
+							}
+						}
+					}
                 }
 
 				if(!found) {
