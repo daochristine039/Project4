@@ -56,7 +56,7 @@ public abstract class Critter {
      * Move the critter in the direction indicated by "int direction" by one spot
      * Remove the cost of energy required for walking from the critter
      * Make "moved = true" since the critter moves
-     * @param direction
+     * @param direction of the critter
      */
 	protected final void walk(int direction) {
 			energy -= Params.walk_energy_cost;  //Remove the cost of energy for walking from the critter
@@ -101,7 +101,7 @@ public abstract class Critter {
      * move the critter in the direction indicated by "int direction" by two spots
      * Remove the cost of energy required for running from the critter
      * Make "moved = true" since the critter moves
-     * @param direction
+     * @param direction of the critter
      */
 	protected final void run(int direction) {
 			energy -= Params.run_energy_cost;   //Remove cost of energy from running
@@ -144,7 +144,7 @@ public abstract class Critter {
 
     /**
      * Create a new critter based on the parent
-     * @param direction
+     * @param direction of the critter
      * @param offspring : new child of the parent
      */
 	protected final void reproduce(Critter offspring, int direction) {
@@ -186,8 +186,8 @@ public abstract class Critter {
 	 * (Java weirdness: Exception throwing does not work properly if the parameter has lower-case instead of
 	 * upper. For example, if craig is supplied instead of Craig, an error is thrown instead of
 	 * an Exception.)
-	 * @param critter_class_name
-	 * @throws InvalidCritterException
+	 * @param critter_class_name subclass name
+	 * @throws InvalidCritterException if invalid critter
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
 		try{
@@ -207,7 +207,7 @@ public abstract class Critter {
 	 * Gets a list of critters of a specific type.
 	 * @param critter_class_name What kind of Critter is to be listed.  Unqualified class name.
 	 * @return List of Critters.
-	 * @throws InvalidCritterException
+	 * @throws InvalidCritterException if invalid critter
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		List<Critter> result = new java.util.ArrayList<Critter>();
